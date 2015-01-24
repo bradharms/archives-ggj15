@@ -24,7 +24,7 @@ class Level00 extends FlxNapeState
 		var spaceMan = new SpaceMan(200, 400);
 		add(new FlxSprite(0, 0, "assets/Environment_1.png"));
 		add(spaceMan);
-		add(createFloor(100, spaceMan.body.position.y + spaceMan.myHeight, 50, 50));
+		add(createFloor(640, spaceMan.body.position.y + spaceMan.myHeight, 1280, 10));
 	}
 	
 	public function createFloor(X:Float, Y:Float, W:Float, H:Float) {
