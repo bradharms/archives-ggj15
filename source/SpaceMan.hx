@@ -83,7 +83,7 @@ class SpaceMan extends FlxNapeSprite
 				force = Vec2.weak(-accel, 0);
 				newVel = this.body.velocity.add( force );
 				if (newVel.x > -maxSpeed)
-					this.body.velocity = newVel; 
+					this.body.velocity = newVel;
 			}
 
 			if ((playerID == 0 && FlxG.keys.pressed.RIGHT)
@@ -113,6 +113,17 @@ class SpaceMan extends FlxNapeSprite
 			{
 				trace("Fire.");
 			}
+		}
+
+		// animation
+		if (body.velocity.x > 0.01) {
+			animation.play(ANIM_WALK);
+			this.flipX = false;
+		} else if (body.velocity.x < -0.01) {
+			animation.play(ANIM_WALK);
+			this.flipX = true;
+		} else {
+			animation.play(ANIM_STAND);
 		}
 	}
 }
