@@ -139,15 +139,6 @@ class SpaceMan extends FlxNapeSprite
 			animation.play(ANIM_WALK);
 			this.flipX = true;
 			stepSounds(true);
-		}
-		if (body.velocity.y < 0.01) {
-			animation.play(JetPack.JETPACK_ANIM_ON);
-			this.flipX = false;
-			stepSounds(true);
-		} else if (body.velocity.y < -0.01) {
-			animation.play(JetPack.JETPACK_ANIM_OFF);
-			this.flipX = true;
-			stepSounds(true);
 		} else {
 			animation.play(ANIM_STAND);
 			stepSounds(false);
