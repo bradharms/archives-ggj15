@@ -28,6 +28,7 @@ class MyBaseState extends FlxNapeState
     public var loader  : LevelLoader;
     public var bgm     : Sound;
     public var players : Array<SpaceMan>;
+    public var items   : Array<Items>;
     public var cellW   : Float;
     public var cellH   : Float; 
 
