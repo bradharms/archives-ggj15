@@ -120,7 +120,7 @@ class SpaceMan extends FlxNapeSprite
 			if ((playerID == 0 && FlxG.keys.justPressed.A)
 				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.B)))
 			{
-				SpaceMan.
+				SpaceMan;
 				//blaster.useItem(SpaceMan.myWidth + 230, SpaceMan.myHeight + 151);
 			}
 
