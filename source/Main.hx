@@ -66,32 +66,4 @@ class Main extends Sprite
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 	}
-	
-	public static var currentState:Int;
-	
-	public static function nextState()
-	{
-		currentState++;
-		currentState %= 5;
-		changeState();
-	}
-	
-	public static function prevState()
-	{
-		currentState--;
-		currentState < 0 ? currentState = 4 : null;
-		changeState();
-	}
-	
-	private static function changeState()
-	{
-		switch (currentState)
-		{
-			case 0:	FlxG.switchState(new Piramid());
-			case 1: FlxG.switchState(new Balloons());
-			case 2: FlxG.switchState(new Blob());
-			case 3: FlxG.switchState(new Fight());
-			case 4: FlxG.switchState(new Cutup());
-		}
-	}
 }

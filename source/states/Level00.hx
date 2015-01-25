@@ -17,14 +17,19 @@ using Std;
  */
 class Level00 extends FlxNapeState
 {
+	static public inline var FNAME  = "assets/level1.png";
+	static public inline var CELL_W = 100.0;
+	static public inline var CELL_H = 100.0;
+
+	var loader : LevelLoader;
 	var fps:FPS;
+	
 	override public function create() 
 	{
 		super.create();
-		var spaceMan = new SpaceMan(200, 400);
 		add(new FlxSprite(0, 0, "assets/Environment_1.png"));
-		add(spaceMan);
-		add(createFloor(640, spaceMan.body.position.y + spaceMan.myHeight, 1280, 10));
+		loader = new LevelLoader(this, FNAME, CELL_W, CELL_H);
+		loader.load();
 	}
 	
 	public function createFloor(X:Float, Y:Float, W:Float, H:Float) {
