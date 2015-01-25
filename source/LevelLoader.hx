@@ -129,7 +129,7 @@ class LevelLoader
     }
 
     public function spawnSwitchLadder(cellX, cellY, col) {
-        
+		
     }
 
     public function spawnMovingPlatform(cellX, cellY, col) {
