@@ -36,7 +36,7 @@ class SpaceMan extends FlxNapeSprite
 	public static inline var accel:Float = 80;
 	public static inline var maxSpeed:Float = 500;
 	// User status
-	public var weapon:Dynamic;
+	public var weapon:Items;
 	private var _gamepad:FlxGamepad;
 	public var jump:Bool; // Controller:A Keyboard:S
 	public var use:Bool; // Controller:X Keyboard:A 
@@ -121,24 +121,28 @@ class SpaceMan extends FlxNapeSprite
 			if ((playerID == 0 && FlxG.keys.justPressed.A)
 				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.B)))
 			{
+				var collisions = body.interactingBodies();
+				var st = cast(FlxG.state, MyBaseState);
+				var shortestDist = 999999.0;
+				var closestItem : Items = null;
+				for (stItem in st.items) {
+					var dist = Vec2.distance(body.position, stItem.body.position);
+					if (dist < shortestDist) {
+						shortestDist = dist;
+						closestItem = stItem;
+					}
+				}
+				if (shortestDist < 150.0 && closestItem != null
+					&& ( (playerID == 0 && st.players[1].weapon != closestItem) ||
+					 	 (playerID == 1 && st.players[0].weapon != closestItem))) {
+					trace("pickup");
+				}
 			}
 
 			if ((playerID == 0 && FlxG.keys.justPressed.D)
 				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.X)))
 			{
 				trace("Fire.");
-			}
-		}
-
-		var collisions = body.interactingBodies();
-		var st = cast(FlxG.state, MyBaseState);
-		for (stItem in st.items) {
-			for (collision in collisions) {
-				if (collision == stItem.body) {
-					if (stItem.is(JetPack)) {
-						trace("jetpack");
-					}
-				}
 			}
 		}
 
