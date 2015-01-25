@@ -24,7 +24,7 @@ class LevelLoader
     static public inline var COL_LADDER         = 0x888888;
     static public inline var COL_PLAYER1        = 0xFF0000;
     static public inline var COL_PLAYER2        = 0x0000FF;
-    static public inline var COL_GUN            = 0xFFFF00;
+    static public inline var COL_JETPACK        = 0xFFFF00;
     static public inline var COL_BLASTER        = 0x00FF00;
     static public inline var COL_SPAWNLADDER    = 0xFF8800;
     static public inline var COL_SWITCHLADDER   = 0xFF00FF;
@@ -50,7 +50,7 @@ class LevelLoader
             COL_LADDER         => spawnLadder,
             COL_PLAYER1        => spawnPlayer1,
             COL_PLAYER2        => spawnPlayer2,
-            COL_GUN            => spawnGun,
+            COL_JETPACK        => spawnJetpack,
             COL_BLASTER        => spawnBlaster,
             COL_SPAWNLADDER    => spawnSpawnLadder,
             COL_SWITCHLADDER   => spawnSwitchLadder,
@@ -110,7 +110,7 @@ class LevelLoader
         state.add(player);
     }
 
-    public function spawnGun(cellX, cellY, col) {
+    public function spawnJetpack(cellX, cellY, col) {
         
     }
 

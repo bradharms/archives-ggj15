@@ -5,6 +5,7 @@ import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.FlxSprite;
 import flixel.FlxG;
+import flixel.util.FlxPoint;
 import openfl.display.FPS;
 import openfl.errors.Error;
 import nape.phys.BodyType;
@@ -63,6 +64,15 @@ class MyBaseState extends FlxNapeState
     {
         super.destroy();
         FlxG.removeChild(fps);
+    }
+
+    override public function update() {
+        super.update();
+        if (players[0] != null && players[1] != null) {
+            var midX = (players[0].body.position.x + players[1].body.position.x) * 0.5;
+            var midY = (players[0].body.position.y + players[1].body.position.y) * 0.5;
+            FlxG.camera.focusOn(new FlxPoint(midX, midY));
+        }
     }
 
     public function createFloor(X:Float, Y:Float, W:Float, H:Float) {

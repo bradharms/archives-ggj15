@@ -59,31 +59,37 @@ class SpaceMan extends FlxNapeSprite
 		// User gamepad
 		if (FlxG.gamepads.lastActive != null)
 		{
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP))
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP)
+				|| FlxG.keys.pressed.UP)
 			{
 
 			}
 			
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN))
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN)
+				|| FlxG.keys.pressed.DOWN)
 			{
 				trace('test');
 			}
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT))
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT)
+				|| FlxG.keys.pressed.LEFT)
 			{
 				var force = new Vec2(-50, 0);
 				var newVel = this.body.velocity.add( force );
 				if (newVel.x > -500)
 					this.body.velocity = newVel; 
 			}
-			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_LEFT))
+			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_LEFT)
+				|| FlxG.keys.justReleased.LEFT)
 			{
 				this.body.velocity.setxy(0, 0);
 			}
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_RIGHT))
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_RIGHT)
+				|| FlxG.keys.pressed.RIGHT)
 			{
 				this.body.velocity.setxy(500, 0);
 			}
-			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_RIGHT))
+			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_RIGHT)
+				|| FlxG.keys.justReleased.RIGHT)
 			{
 				this.body.velocity.setxy(0, 0);
 			}
