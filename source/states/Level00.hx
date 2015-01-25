@@ -17,7 +17,6 @@ using Std;
  */
 class Level00 extends FlxNapeState
 {
-<<<<<<< Updated upstream
 	static public inline var FNAME  = "assets/level1.png";
 	static public inline var CELL_W = 100.0;
 	static public inline var CELL_H = 100.0;
@@ -48,8 +47,5 @@ class Level00 extends FlxNapeState
 		super.destroy();
 		FlxG.removeChild(fps);
 	}
-	
-	
-	
 	
 }
