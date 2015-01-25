@@ -17,7 +17,6 @@ class SpaceMan extends FlxNapeSprite
 	public static inline var myWidth = 100.0;
 	public static inline var myHeight = 310.0;
 	public static inline var jumpHeight:Int = 310;
-	public static inline var myVelocity:Int = 500;
 	// User status
 	public var weapon:Dynamic;
 	private var _gamepad:FlxGamepad;
@@ -51,7 +50,7 @@ class SpaceMan extends FlxNapeSprite
 		{
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP))
 			{
-				trace("The up button of the Xbox 360 controller is pressed.");
+			}
 			}
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN))
 			{
@@ -59,15 +58,23 @@ class SpaceMan extends FlxNapeSprite
 			}
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT))
 			{
-				this.body.velocity.setxy(0, -500);
+				this.body.velocity.setxy(-500, 0);
+			}
+			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_LEFT))
+			{
+				this.body.velocity.setxy(0, 0);
 			}
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_RIGHT))
 			{
-				this.body.velocity.setxy(0, 500);
+				this.body.velocity.setxy(500, 0);
+			}
+			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_RIGHT))
+			{
+				this.body.velocity.setxy(0, 0);
 			}
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.A))
 			{
-				trace("Jump");
+				this.body.velocity.setxy(0, -500);
 			}
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.B))
 			{
@@ -77,8 +84,6 @@ class SpaceMan extends FlxNapeSprite
 			{
 				trace("Fire.");
 			}
-			
 		}
-	}
 	
 }
