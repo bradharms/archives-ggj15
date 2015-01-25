@@ -64,9 +64,10 @@ class SpaceMan extends FlxNapeSprite
 		animation.add(ANIM_WALK,  [for (i in 10...20) i], 15, true);
 		animation.add(ANIM_CLIMB, [20, 21],               4,  true);
 		
+		
 		animation.play(ANIM_STAND);
 
-		sfx = Assets.getSound(STEP_FNAME);
+		//sfx = Assets.getSound(STEP_FNAME);
 	}
 	
 	override public function update()
@@ -139,12 +140,12 @@ class SpaceMan extends FlxNapeSprite
 			this.flipX = true;
 			stepSounds(true);
 		}
-		if (body.velocity.y > 0.01) {
-			animation.play(ANIM_WALK);
+		if (body.velocity.y < 0.01) {
+			animation.play(JetPack.JETPACK_ANIM_ON);
 			this.flipX = false;
 			stepSounds(true);
 		} else if (body.velocity.y < -0.01) {
-			animation.play(ANIM_WALK);
+			animation.play(JetPack.JETPACK_ANIM_OFF);
 			this.flipX = true;
 			stepSounds(true);
 		} else {
@@ -154,6 +155,7 @@ class SpaceMan extends FlxNapeSprite
 	}
 
 	function stepSounds(on) {
+		return;
 		if (on) {
 			if (sfxChan == null) {
 				sfxChan = sfx.play( 0 , 10 );

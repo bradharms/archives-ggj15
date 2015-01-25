@@ -31,8 +31,7 @@ class Blaster extends Items
 	}
 	
 	override public function useItem(x, y) {
-		super.useItem(x, y);
-		
+		super.useItem(x, y);		
 	}
 	
 }

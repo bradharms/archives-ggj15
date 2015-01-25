@@ -33,10 +33,10 @@ class JetPack extends Items
 		body.allowRotation = false;
 		body.allowMovement = false;
 		loadGraphic(JETPACK_FNAME, true, 156, 156);
-		animation.add(JETPACK_ANIM_OFF, [0], 10, true);
 		animation.add(JETPACK_ANIM_ON, [for (i in 0...1) i], 30, true);
+		animation.add(JETPACK_ANIM_OFF, [0], 10, true);
 		
-		animation.play(JETPACK_ANIM_OFF);
+		animation.play(JETPACK_ANIM_ON);
 	}
 	
 	override public function useItem(x, y) {
