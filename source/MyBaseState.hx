@@ -14,8 +14,8 @@ using Std;
 
 class MyBaseState extends FlxNapeState
 {
-    static public inline var DEFAULT_CELL_W = 100.0;
-    static public inline var DEFAULT_CELL_H = 100.0;
+    static public inline var DEFAULT_CELL_W = 150.0;
+    static public inline var DEFAULT_CELL_H = 150.0;
     static public inline var DEFAULT_GRAIVITY = 500.0;
 
     public var fps     : FPS;
@@ -72,6 +72,7 @@ class MyBaseState extends FlxNapeState
             var midX = (players[0].body.position.x + players[1].body.position.x) * 0.5;
             var midY = (players[0].body.position.y + players[1].body.position.y) * 0.5;
             FlxG.camera.focusOn(new FlxPoint(midX, midY));
+            FlxG.camera.setScale(0.5, 0.5);
         }
     }
 

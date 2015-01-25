@@ -16,7 +16,6 @@ typedef SpawnerCallback = Int -> Int -> Int -> Void;
 class LevelLoader
 {
 
-    static public inline var DEFAULT_TILE_COLOR = 0xFFCCAAFF; 
 
     static public inline var COL_EMPTY          = 0xFFFFFF;
     static public inline var COL_SOLID          = 0x000000;
@@ -79,10 +78,11 @@ class LevelLoader
 
     public function spawnSolid(cellX, cellY, col) {
         var p = getPoint(cellX, cellY);
-        var brick = new FlxNapeSprite(p.x, p.y);
-        brick.makeGraphic( tileW.int(), tileH.int(), DEFAULT_TILE_COLOR);
-        brick.createRectangularBody( 0, 0, BodyType.STATIC );
-        brick.setBodyMaterial(.5, .5, .5, 2);
+        //var brick = new FlxNapeSprite(p.x, p.y);
+        //brick.makeGraphic( tileW.int(), tileH.int(), DEFAULT_TILE_COLOR);
+        //brick.createRectangularBody( 0, 0, BodyType.STATIC );
+        //brick.setBodyMaterial(.5, .5, .5, 2);
+        var brick = new GoldBlock(p.x, p.y, tileW, tileH);
         state.add(brick);
     }
 

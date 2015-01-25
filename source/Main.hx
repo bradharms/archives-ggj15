@@ -71,5 +71,6 @@ class Main extends Sprite
 			gameWidth = Math.ceil(sw / zoom);
 			gameHeight = Math.ceil(sh / zoom);
 		}
+		//camera.zoom = zoom;
 	}
 }
