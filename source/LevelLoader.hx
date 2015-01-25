@@ -31,12 +31,12 @@ class LevelLoader
 
     public var spawners : Map<Int, SpawnerCallback>;
     
-    public var state    : FlxNapeState;
+    public var state    : MyBaseState;
     public var fname    : String;
     public var tileW    : Float;
     public var tileH    : Float;
 
-    public function new(state:FlxNapeState, fname:String, tileW : Float, tileH : Float) {
+    public function new(state:MyBaseState, fname:String, tileW : Float, tileH : Float) {
         this.state = state;
         this.fname = fname;
         this.tileW = tileW;
@@ -96,12 +96,14 @@ class LevelLoader
     public function spawnPlayer1(cellX, cellY, col) {
         var p = getPoint(cellX, cellY);
         var player = new SpaceMan(p.x, p.y, 0);
+        state.players[0] = player;
         state.add(player);
     }
 
     public function spawnPlayer2(cellX, cellY, col) {
         var p = getPoint(cellX, cellY);
         var player = new SpaceMan(p.x, p.y, 1);
+        state.players[1] = player;
         state.add(player);
     }
 
