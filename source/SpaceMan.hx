@@ -16,33 +16,24 @@ class SpaceMan extends FlxNapeSprite
 	// User properties
 	public static inline var myWidth = 100.0;
 	public static inline var myHeight = 310.0;
-	public static inline var jumpHeight = 310;
-	public static inline var myVelocity = 500;
+	public static inline var jumpHeight:Int = 310;
+	public static inline var myVelocity:Int = 500;
 	// User status
-	public var weapon;
-	public var health;
+	public var weapon:Dynamic;
 	// User gamepad
 	private var _gamePad:FlxGamepad;
-	public var jump; // Controller:A Keyboard:S
-	public var use; // Controller:X Keyboard:A 
-	public var fire; // Controller:B Keyboard:D
-	public var move_left; // Direction controls are keyboard arrow keys or Controller DPAD
-	public var move_right;
-	public var move_up;
-	public var move_down;
+	public var jump:Bool; // Controller:A Keyboard:S
+	public var use:Bool; // Controller:X Keyboard:A 
+	public var fire:Bool; // Controller:B Keyboard:D
+	public var move_left:Bool; // Direction controls are keyboard arrow keys or Controller DPAD
+	public var move_right:Bool;
+	public var move_up:Bool;
+	public var move_down:Bool;
 	
 	
 	public function new(X, Y) 
 	{
-		super();
-		jump = false;
-		use = false;
-		fire = false;
-		move_up = false;
-		move_down = false;
-		move_right = false;
-		move_left = false;
-		
+		super();		
 		weapon = null;
 		
 		makeGraphic(myWidth.int(), myHeight.int(), 0xFFFFFFFF);
@@ -57,7 +48,6 @@ class SpaceMan extends FlxNapeSprite
 	override public function update()
 	{
 		super.update();
-		updateWeapon();
 	}
 	
 }
