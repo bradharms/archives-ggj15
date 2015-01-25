@@ -23,7 +23,7 @@ class Level00 extends FlxNapeState
 
 	var loader : LevelLoader;	
 	var fps:FPS;
-	public var players:Array;
+	public var players:Array<SpaceMan>;
 
 	override public function create() 
 	{
