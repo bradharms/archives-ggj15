@@ -132,7 +132,7 @@ class SpaceMan extends FlxNapeSprite
 						closestItem = stItem;
 					}
 				}
-				if (shortestDist < 150.0 && closestItem != null
+				if (shortestDist < 250.0 && closestItem != null
 					&& ( (playerID == 0 && st.players[1].weapon != closestItem) ||
 					 	 (playerID == 1 && st.players[0].weapon != closestItem))) {
 					trace("pickup");
