@@ -31,10 +31,10 @@ class JetPack extends Items
 		holdPosY  = -35.0;
 		makeGraphic(jetpackWidth.int(), jetpackHeight.int(), 0xFFFFFFFF);
 		createRectangularBody();
-		setBodyMaterial(.5, .5, .5, 2);
-		this.body.type = BodyType.KINEMATIC;
+		setBodyMaterial(.5, .5, .5, 0.001);
+		this.body.type = BodyType.DYNAMIC;
 		body.allowRotation = false;
-		body.allowMovement = false;
+		body.allowMovement = true;
 		loadGraphic(JETPACK_FNAME, true, 156, 156);
 		animation.add(JETPACK_ANIM_ON, [for (i in 0...1) i], 30, true);
 		animation.add(JETPACK_ANIM_OFF, [0], 10, true);
