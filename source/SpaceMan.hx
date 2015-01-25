@@ -14,6 +14,7 @@ using Std;
  */
 class SpaceMan extends FlxNapeSprite
 {
+	public static inline var GFX_FNAME  = 'assets/spacemanFullSS.png';
 	public static inline var ANIM_STAND = 'stand';
 	public static inline var ANIM_WALK  = 'walk';
 	public static inline var ANIM_CLIMB = 'climb';
@@ -44,12 +45,12 @@ class SpaceMan extends FlxNapeSprite
 		setBodyMaterial(.5, .5, .5, 2);
 		body.allowRotation = false;
 		
-		loadGraphic('assets/spacemanFullSS.png', true, 348, 348);
+		loadGraphic(GFX_FNAME, true, 348, 348);
 		animation.add(ANIM_STAND, [0] ,                   10, true);
 		animation.add(ANIM_WALK,  [for (i in 10...20) i], 15, true);
 		animation.add(ANIM_CLIMB, [20, 21],               4,  true);
 		
-		animation.play(ANIM_WALK);
+		animation.play(ANIM_STAND);
 	}
 	
 	override public function update()
