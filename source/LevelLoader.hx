@@ -95,13 +95,13 @@ class LevelLoader
 
     public function spawnPlayer1(cellX, cellY, col) {
         var p = getPoint(cellX, cellY);
-        var player = new SpaceMan(p.x, p.y);
+        var player = new SpaceMan(p.x, p.y, 0);
         state.add(player);
     }
 
     public function spawnPlayer2(cellX, cellY, col) {
         var p = getPoint(cellX, cellY);
-        var player = new SpaceMan(p.x, p.y);
+        var player = new SpaceMan(p.x, p.y, 1);
         state.add(player);
     }
 

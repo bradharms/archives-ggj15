@@ -30,19 +30,18 @@ class SpaceMan extends FlxNapeSprite
 	public var move_up:Bool;
 	public var move_down:Bool;
 	
+	public var playerID:Int;
 	
-	public function new(X, Y) 
+	public function new(X, Y, playerID_) 
 	{
-		super();		
-		weapon = null;
-		
+		playerID = playerID_;
+		super(X, Y);		
 		makeGraphic(myWidth.int(), myHeight.int(), 0xFFFFFFFF);
 		createRectangularBody();
-		loadGraphic('assets/spaceman.png');
 		setBodyMaterial(.5, .5, .5, 2);
-		body.position.y = Y;
-		body.position.x = X;
 		body.allowRotation = false;
+		
+		loadGraphic('assets/spaceman.png');
 	}
 	
 	override public function update()
