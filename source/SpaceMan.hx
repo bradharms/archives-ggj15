@@ -21,7 +21,7 @@ class SpaceMan extends FlxNapeSprite
 	// User status
 	public var weapon:Dynamic;
 	// User gamepad
-	private var _gamePad:FlxGamepad;
+	public var _gamePad:FlxGamepad;
 	public var jump:Bool; // Controller:A Keyboard:S
 	public var use:Bool; // Controller:X Keyboard:A 
 	public var fire:Bool; // Controller:B Keyboard:D
@@ -47,6 +47,38 @@ class SpaceMan extends FlxNapeSprite
 	override public function update()
 	{
 		super.update();
+		if (_gamePad != null)
+		{
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP))
+			{
+				trace("The up button of the Xbox 360 controller is pressed.");
+			}
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN))
+			{
+				trace('test');
+			}
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT))
+			{
+				this.body.velocity.setxy(0, -500);
+			}
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_RIGHT))
+			{
+				this.body.velocity.setxy(0, 500);
+			}
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.A))
+			{
+				trace("Jump");
+			}
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.B))
+			{
+				trace("Pick Up.");
+			}
+			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.X))
+			{
+				trace("Fire.");
+			}
+			
+		}
 	}
 	
 }
