@@ -159,6 +159,9 @@ class SpaceMan extends FlxNapeSprite
 			animation.play(ANIM_STAND);
 			stepSounds(false);
 		}
+
+		if (y > 1280)
+			FlxG.switchState(new states.GameOver());
 	}
 
 	function stepSounds(on) {

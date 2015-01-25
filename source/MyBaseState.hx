@@ -71,6 +71,7 @@ class MyBaseState extends FlxNapeState
         
         // Add the background
         bkg = new FlxSprite(0, 0, _fnameBkg);
+        bkg.scrollFactor.set(0.0, 0.0);
         add(bkg);
 
         // Load the level (this will add cameras)

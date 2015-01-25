@@ -94,7 +94,7 @@ class LevelLoader
         
     }
 
-    public function spawnPlayer1(cellX, cellY, col) {
+    public function spawnPlayer2(cellX, cellY, col) {
         var p = getPoint(cellX, cellY);
         var player = new SpaceMan(p.x, p.y, 0);
         state.players[0] = player;
@@ -103,7 +103,7 @@ class LevelLoader
         //var camera = new FlxCamera(0, 0, Main. , ?Height : Int , ?Zoom : Float );
     }
 
-    public function spawnPlayer2(cellX, cellY, col) {
+    public function spawnPlayer1(cellX, cellY, col) {
         var p = getPoint(cellX, cellY);
         var player = new SpaceMan(p.x, p.y, 1);
         state.players[1] = player;
