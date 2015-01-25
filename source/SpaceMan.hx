@@ -6,6 +6,9 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadManager;
 import flixel.input.gamepad.XboxButtonID;
 import nape.geom.Vec2;
+// import openfl.Assets;
+// import openfl.media.Sound;
+// import openfl.media.SoundChannel;
 
 using Std;
 /**
@@ -15,6 +18,7 @@ using Std;
 class SpaceMan extends FlxNapeSprite
 {
 	public static inline var GFX_FNAME  = 'assets/spacemanFullSS.png';
+	// public static inline var STEP_FNAME  = 'assets/sound/footsteps.ogg';
 	public static inline var ANIM_STAND = 'stand';
 	public static inline var ANIM_WALK  = 'walk';
 	public static inline var ANIM_CLIMB = 'climb';
@@ -37,6 +41,8 @@ class SpaceMan extends FlxNapeSprite
 	public var move_down:Bool;
 	
 	public var playerID:Int;
+	// public var sfx : Sound;
+	// public var sfxChan : SoundChannel = null;
 	
 	public function new(X, Y, playerID_) 
 	{
@@ -53,6 +59,8 @@ class SpaceMan extends FlxNapeSprite
 		animation.add(ANIM_CLIMB, [20, 21],               4,  true);
 		
 		animation.play(ANIM_STAND);
+
+		// sfx = Assets.getSound(STEP_FNAME);
 	}
 	
 	override public function update()
@@ -126,4 +134,16 @@ class SpaceMan extends FlxNapeSprite
 			animation.play(ANIM_STAND);
 		}
 	}
+
+	// function stepSounds(on) {
+	// 	if (on) {
+	// 		if (sfxChan == null) {
+	// 			sfxChan = sfx.play( ?startTime : Float , ?loops : Int , ?sndTransform : flash.media.SoundTransform )
+	// 		}
+	// 	} else {
+	// 		if (sfxChan != null) {
+	// 			sfxChan 
+	// 		}
+	// 	}
+	// }
 }
