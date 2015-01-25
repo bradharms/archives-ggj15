@@ -26,6 +26,7 @@ class Level00 extends MyBaseState
 	static public inline var FNAME_BGM    = "assets/sound/SpaceExplorers.ogg";
 	#end
 
+
 	public function new() {
 		super(FNAME_LEVEL, FNAME_BKG, FNAME_BGM);
 	}

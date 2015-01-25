@@ -35,7 +35,7 @@ class LevelLoader
     public var fname    : String;
     public var tileW    : Float;
     public var tileH    : Float;
-
+	
     public function new(state:MyBaseState, fname:String, tileW : Float, tileH : Float) {
         this.state = state;
         this.fname = fname;
@@ -115,7 +115,9 @@ class LevelLoader
     }
 
     public function spawnBlaster(cellX, cellY, col) {
-        
+       var p = getPoint(cellX, cellY);
+	   var blaster = new Blaster(p.x, p.y);
+	   state.add(blaster);
     }
 
     public function spawnSpawnLadder(cellX, cellY, col) {

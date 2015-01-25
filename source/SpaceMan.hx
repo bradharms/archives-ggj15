@@ -77,7 +77,8 @@ class SpaceMan extends FlxNapeSprite
 		super.update();
 		
 		// User gamepad
-		if (playerID == 0 || FlxG.gamepads.lastActive != null)
+		var gamepad = FlxG.gamepads.lastActive;
+		if (playerID == 0 || gamepad != null)
 		{
 			if ((playerID == 0 && FlxG.keys.pressed.UP)
 				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP)))
@@ -119,7 +120,8 @@ class SpaceMan extends FlxNapeSprite
 			if ((playerID == 0 && FlxG.keys.justPressed.A)
 				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.B)))
 			{
-				trace("Pick Up.");
+				SpaceMan.
+				//blaster.useItem(SpaceMan.myWidth + 230, SpaceMan.myHeight + 151);
 			}
 
 			if ((playerID == 0 && FlxG.keys.justPressed.D)
