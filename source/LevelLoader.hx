@@ -3,6 +3,7 @@ package ;
 
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
+import flixel.FlxCamera;
 import flixel.util.FlxPoint;
 import nape.phys.BodyType;
 import openfl.Assets;
@@ -98,6 +99,8 @@ class LevelLoader
         var player = new SpaceMan(p.x, p.y, 0);
         state.players[0] = player;
         state.add(player);
+
+        //var camera = new FlxCamera(0, 0, Main. , ?Height : Int , ?Zoom : Float );
     }
 
     public function spawnPlayer2(cellX, cellY, col) {

@@ -42,19 +42,21 @@ class MyBaseState extends FlxNapeState
     override public function create() 
     {
         super.create();
+
+        // Reset cameras, prepare to have them attached by the level loader
+        //FlxG.cameras.reset();
+        //FlxG.cameras.remove(FlxG.camera);
+        
+        // Add the background
         bkg = new FlxSprite(0, 0, _fnameBkg);
         add(bkg);
+
+        // Load the level (this will add cameras)
         loader = new LevelLoader(this, _fnameLevel, cellW, cellH);
         loader.load();
-        FlxNapeState.space.gravity.setxy(0, _grav);
 
-        for (i in 0...players.length) {
-            if (players[0] == null) {
-                throw new Error("Tile map  is missing 1 or more players");
-            } else {
-                // TODO: Create cameras, assign them to players
-            }
-        }
+        // Apply gravity
+        FlxNapeState.space.gravity.setxy(0, _grav);
     }
 
     override public function destroy():Void 

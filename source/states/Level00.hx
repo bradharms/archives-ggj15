@@ -23,4 +23,9 @@ class Level00 extends MyBaseState
 	public function new() {
 		super(FNAME_LEVEL, FNAME_BKG);
 	}
+
+	override public function create() {
+		super.create();
+		//trace(FlxG.cameras.list[0].)
+	}
 }

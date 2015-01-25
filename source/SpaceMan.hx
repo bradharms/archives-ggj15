@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadManager;
 import flixel.input.gamepad.XboxButtonID;
+import nape.geom.Vec2;
 
 using Std;
 /**
@@ -50,15 +51,17 @@ class SpaceMan extends FlxNapeSprite
 		{
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP))
 			{
+
 			}
-			}
+			
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN))
 			{
 				trace('test');
 			}
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT))
 			{
-				this.body.velocity.setxy(-500, 0);
+				var force = new Vec2(-50, 0);
+				this.body.velocity = this.body.velocity.add( force ); 
 			}
 			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_LEFT))
 			{
@@ -85,5 +88,5 @@ class SpaceMan extends FlxNapeSprite
 				trace("Fire.");
 			}
 		}
-	
+	}
 }
