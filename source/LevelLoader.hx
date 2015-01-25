@@ -129,7 +129,10 @@ class LevelLoader
     }
 
     public function spawnSwitchLadder(cellX, cellY, col) {
-        
+        var p = getPoint(cellX, cellY);
+        var switch = new LadderSwitch(p.x, p.y, 0);
+        state.items.push(switch);
+        state.add(switch);
     }
 
     public function spawnMovingPlatform(cellX, cellY, col) {
