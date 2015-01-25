@@ -47,7 +47,7 @@ class MyBaseState extends FlxNapeState
         cellH       = cellH_ != 0.0 ? cellH_ : DEFAULT_CELL_H;
         _grav       = grav   != 0.0 ? grav   : DEFAULT_GRAIVITY;
         players     = [null, null];
-		items		= [];
+        items       = [];
     }
 
     override public function create() 
