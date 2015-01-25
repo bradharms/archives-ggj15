@@ -67,7 +67,7 @@ class SpaceMan extends FlxNapeSprite
 		
 		animation.play(ANIM_STAND);
 
-		//sfx = Assets.getSound(STEP_FNAME);
+		sfx = Assets.getSound(STEP_FNAME);
 	}
 	
 	override public function update()
@@ -135,7 +135,7 @@ class SpaceMan extends FlxNapeSprite
 		for (stItem in st.items) {
 			for (collision in collisions) {
 				if (collision == stItem.body) {
-					if (stItem.body.is(JetPack)) {
+					if (stItem.is(JetPack)) {
 						trace("jetpack");
 					}
 				}
@@ -159,7 +159,7 @@ class SpaceMan extends FlxNapeSprite
 
 	function stepSounds(on) {
 		if (on) {
-			if (sfxChan == null) {
+			if (sfxChan == null && sfx != null) {
 				sfxChan = sfx.play( 0 , 10 );
 			}
 		} else {
