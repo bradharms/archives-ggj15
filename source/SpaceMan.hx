@@ -14,6 +14,10 @@ using Std;
  */
 class SpaceMan extends FlxNapeSprite
 {
+	public static inline var ANIM_STAND = 'stand';
+	public static inline var ANIM_WALK  = 'walk';
+	public static inline var ANIM_CLIMB = 'climb';
+
 	// User properties
 	public static inline var myWidth = 100.0;
 	public static inline var myHeight = 310.0;
@@ -40,7 +44,12 @@ class SpaceMan extends FlxNapeSprite
 		setBodyMaterial(.5, .5, .5, 2);
 		body.allowRotation = false;
 		
-		loadGraphic('assets/spaceman.png');
+		loadGraphic('assets/spacemanFullSS.png', true, 348, 348);
+		animation.add(ANIM_STAND, [0] ,                   10, true);
+		animation.add(ANIM_WALK,  [for (i in 10...20) i], 15, true);
+		animation.add(ANIM_CLIMB, [20, 21],               4,  true);
+		
+		animation.play(ANIM_WALK);
 	}
 	
 	override public function update()
@@ -61,7 +70,9 @@ class SpaceMan extends FlxNapeSprite
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT))
 			{
 				var force = new Vec2(-50, 0);
-				this.body.velocity = this.body.velocity.add( force ); 
+				var newVel = this.body.velocity.add( force );
+				if (newVel.x > -500)
+					this.body.velocity = newVel; 
 			}
 			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_LEFT))
 			{
