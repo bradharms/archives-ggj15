@@ -20,8 +20,7 @@ class SpaceMan extends FlxNapeSprite
 	public static inline var myVelocity:Int = 500;
 	// User status
 	public var weapon:Dynamic;
-	// User gamepad
-	public var _gamePad:FlxGamepad;
+	private var _gamepad:FlxGamepad;
 	public var jump:Bool; // Controller:A Keyboard:S
 	public var use:Bool; // Controller:X Keyboard:A 
 	public var fire:Bool; // Controller:B Keyboard:D
@@ -47,7 +46,8 @@ class SpaceMan extends FlxNapeSprite
 	override public function update()
 	{
 		super.update();
-		if (_gamePad != null)
+		// User gamepad
+		if (FlxG.gamepads.lastActive != null)
 		{
 			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP))
 			{
