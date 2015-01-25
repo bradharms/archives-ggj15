@@ -120,8 +120,6 @@ class SpaceMan extends FlxNapeSprite
 			if ((playerID == 0 && FlxG.keys.justPressed.A)
 				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.B)))
 			{
-				SpaceMan;
-				//blaster.useItem(SpaceMan.myWidth + 230, SpaceMan.myHeight + 151);
 			}
 
 			if ((playerID == 0 && FlxG.keys.justPressed.D)
@@ -137,6 +135,15 @@ class SpaceMan extends FlxNapeSprite
 			this.flipX = false;
 			stepSounds(true);
 		} else if (body.velocity.x < -0.01) {
+			animation.play(ANIM_WALK);
+			this.flipX = true;
+			stepSounds(true);
+		}
+		if (body.velocity.y > 0.01) {
+			animation.play(ANIM_WALK);
+			this.flipX = false;
+			stepSounds(true);
+		} else if (body.velocity.y < -0.01) {
 			animation.play(ANIM_WALK);
 			this.flipX = true;
 			stepSounds(true);

@@ -111,12 +111,16 @@ class LevelLoader
     }
 
     public function spawnJetpack(cellX, cellY, col) {
-        
+        var p = getPoint(cellX, cellY);
+	   var jetpack = new JetPack(p.x, p.y);
+	   state.items.push(jetpack);
+	   state.add(jetpack);
     }
 
     public function spawnBlaster(cellX, cellY, col) {
        var p = getPoint(cellX, cellY);
 	   var blaster = new Blaster(p.x, p.y);
+	   state.items.push(blaster);
 	   state.add(blaster);
     }
 
