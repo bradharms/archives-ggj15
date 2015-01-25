@@ -43,14 +43,6 @@ class Level00 extends FlxNapeState
 		return floor;
 	}
 	
-	public function createWall(X:Float, Y:Float, W:Float, H:Float) {
-		var floor = new FlxNapeSprite(X, Y);
-		floor.makeGraphic(W.int(), H.int(), 0xFFFFFFAA);
-		floor.createRectangularBody(0, 0, BodyType.STATIC);
-		floor.setBodyMaterial(.5, .5, .5, 2);
-		return floor;
-	}
-	
 	override public function destroy():Void 
 	{
 		super.destroy();
