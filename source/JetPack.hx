@@ -23,20 +23,16 @@ class JetPack extends Items
 	
 	public static inline var jetpackWidth = 75.0;
 	public static inline var jetpackHeight = 123.0;
-	override public function new(X, Y) 
+	
+	public function new(X, Y) 
 	{
-		super(X, Y);
+		super(X, Y, jetpackWidth, jetpackHeight);
 		holdPosXR = -80.0;
 		holdPosXL = 80.0;
 		holdPosY  = -35.0;
-		makeGraphic(jetpackWidth.int(), jetpackHeight.int(), 0xFFFFFFFF);
-		createRectangularBody();
-		setBodyMaterial(.5, .5, .5, 0.001);
-		this.body.type = BodyType.DYNAMIC;
-		body.allowRotation = false;
-		body.allowMovement = true;
+		
 		loadGraphic(JETPACK_FNAME, true, 156, 156);
-		animation.add(JETPACK_ANIM_ON, [for (i in 0...1) i], 30, true);
+		animation.add(JETPACK_ANIM_ON, [for (i in 0...2) i], 30, true);
 		animation.add(JETPACK_ANIM_OFF, [0], 10, true);
 		
 		animation.play(JETPACK_ANIM_ON);
