@@ -19,7 +19,7 @@ class MyBaseBlock extends FlxNapeSprite
         _fname = fname;
         makeGraphic(tileW.int(), tileH.int(), DEFAULT_TILE_COLOR);
         createRectangularBody( 0, 0, BodyType.STATIC );
-        setBodyMaterial(.5, .5, .5, 2);
+        setBodyMaterial(0.1, .999, .999);
 
         loadGraphic( _fname );
         origin.x = width * 0.5;

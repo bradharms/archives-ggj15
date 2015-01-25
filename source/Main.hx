@@ -3,6 +3,8 @@ package;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
+import flixel.addons.display.FlxZoomCamera;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
@@ -53,24 +55,29 @@ class Main extends Sprite
 	
 	private function setupGame():Void
 	{
-		applyCameraZoom(FlxG.camera);
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		applyCameraZoom();
+		addChild(new FlxGame(
+			gameWidth, 
+			gameHeight, 
+			initialState, 
+			zoom, 
+			framerate, 
+			framerate, 
+			skipSplash, 
+			startFullscreen
+		));
 	}
 
-	public static function applyCameraZoom(camera) {
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
-
+	public static function applyCameraZoom() {
 		if (zoom == -1)
 		{
-			var sw = Lib.current.stage.stageWidth;
-			var sh = Lib.current.stage.stageHeight;
-			var ratioX:Float =  sw/ gameWidth;
-			var ratioY:Float =  sh / gameHeight;
+			var stageWidth:Int = Lib.current.stage.stageWidth;
+			var stageHeight:Int = Lib.current.stage.stageHeight;
+			var ratioX:Float =  stageWidth / gameWidth;
+			var ratioY:Float =  stageHeight / gameHeight;
 			zoom = Math.min(ratioX, ratioY);
-			gameWidth = Math.ceil(sw / zoom);
-			gameHeight = Math.ceil(sh / zoom);
+			gameWidth = Math.ceil(stageWidth / zoom);
+			gameHeight = Math.ceil(stageHeight / zoom);
 		}
-		//camera.zoom = zoom;
 	}
 }

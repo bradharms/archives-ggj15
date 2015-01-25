@@ -19,9 +19,10 @@ class Level00 extends MyBaseState
 {
 	static public inline var FNAME_LEVEL  = "assets/level00.png";
 	static public inline var FNAME_BKG    = "assets/Environment_1.png";
+	static public inline var FNAME_BGM    = "assets/sound/SpaceExplorers.ogg";
 
 	public function new() {
-		super(FNAME_LEVEL, FNAME_BKG);
+		super(FNAME_LEVEL, FNAME_BKG, FNAME_BGM);
 	}
 
 	override public function create() {

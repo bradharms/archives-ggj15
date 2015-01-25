@@ -22,7 +22,9 @@ class SpaceMan extends FlxNapeSprite
 	// User properties
 	public static inline var myWidth = 100.0;
 	public static inline var myHeight = 310.0;
-	public static inline var jumpHeight:Int = 310;
+	public static inline var jumpPower:Int = 600;
+	public static inline var accel:Float = 80;
+	public static inline var maxSpeed:Float = 500;
 	// User status
 	public var weapon:Dynamic;
 	private var _gamepad:FlxGamepad;
@@ -42,7 +44,7 @@ class SpaceMan extends FlxNapeSprite
 		super(X, Y);		
 		makeGraphic(myWidth.int(), myHeight.int(), 0xFFFFFFFF);
 		createRectangularBody();
-		setBodyMaterial(.5, .5, .5, 2);
+		setBodyMaterial(0.1, .999, .999);
 		body.allowRotation = false;
 		
 		loadGraphic(GFX_FNAME, true, 348, 348);
@@ -55,53 +57,59 @@ class SpaceMan extends FlxNapeSprite
 	
 	override public function update()
 	{
+		var force : Vec2,
+		    newVel : Vec2;
+
 		super.update();
+		
 		// User gamepad
-		if (FlxG.gamepads.lastActive != null)
+		if (playerID == 0 || FlxG.gamepads.lastActive != null)
 		{
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP)
-				|| FlxG.keys.pressed.UP)
+			if ((playerID == 0 && FlxG.keys.pressed.UP)
+				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP)))
 			{
 
 			}
 			
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN)
-				|| FlxG.keys.pressed.DOWN)
+			if ((playerID == 0 && FlxG.keys.pressed.DOWN)
+				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN)))
 			{
 				trace('test');
 			}
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT)
-				|| FlxG.keys.pressed.LEFT)
+
+			if ((playerID == 0 &&  FlxG.keys.pressed.LEFT)
+				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT)))
 			{
-				var force = new Vec2(-50, 0);
-				var newVel = this.body.velocity.add( force );
-				if (newVel.x > -500)
+				force = Vec2.weak(-accel, 0);
+				newVel = this.body.velocity.add( force );
+				if (newVel.x > -maxSpeed)
 					this.body.velocity = newVel; 
 			}
-			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_LEFT)
-				|| FlxG.keys.justReleased.LEFT)
+
+			if ((playerID == 0 && FlxG.keys.pressed.RIGHT)
+				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_RIGHT)))
 			{
-				this.body.velocity.setxy(0, 0);
+				force = Vec2.weak(accel, 0);
+				newVel = this.body.velocity.add( force );
+				if (newVel.x < maxSpeed)
+					this.body.velocity = newVel; 
 			}
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_RIGHT)
-				|| FlxG.keys.pressed.RIGHT)
+
+			if ((playerID == 0 && FlxG.keys.justPressed.S)
+				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.A)))
 			{
-				this.body.velocity.setxy(500, 0);
+				if (body.velocity.y == 0)
+					this.body.velocity.y = -jumpPower;
 			}
-			if (FlxG.gamepads.lastActive.justReleased(XboxButtonID.DPAD_RIGHT)
-				|| FlxG.keys.justReleased.RIGHT)
-			{
-				this.body.velocity.setxy(0, 0);
-			}
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.A))
-			{
-				this.body.velocity.setxy(0, -500);
-			}
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.B))
+
+			if ((playerID == 0 && FlxG.keys.justPressed.A)
+				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.B)))
 			{
 				trace("Pick Up.");
 			}
-			if (FlxG.gamepads.lastActive.pressed(XboxButtonID.X))
+
+			if ((playerID == 0 && FlxG.keys.justPressed.D)
+				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.X)))
 			{
 				trace("Fire.");
 			}
