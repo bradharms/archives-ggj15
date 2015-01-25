@@ -130,6 +130,18 @@ class SpaceMan extends FlxNapeSprite
 			}
 		}
 
+		var collisions = body.interactingBodies();
+		var st = cast(FlxG.state, MyBaseState);
+		for (stItem in st.items) {
+			for (collision in collisions) {
+				if (collision == stItem.body) {
+					if (stItem.body.is(JetPack)) {
+						trace("jetpack");
+					}
+				}
+			}
+		}
+
 		// animation
 		if (body.velocity.x > 0.01) {
 			animation.play(ANIM_WALK);
@@ -146,7 +158,6 @@ class SpaceMan extends FlxNapeSprite
 	}
 
 	function stepSounds(on) {
-		return;
 		if (on) {
 			if (sfxChan == null) {
 				sfxChan = sfx.play( 0 , 10 );

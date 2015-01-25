@@ -3,7 +3,8 @@
 	[
 		{
 			"follow_symlinks": true,
-			"path": "/home/brad/ggj15/"
+			"path": "/home/brad/ggj15/",
+			"folder_exclude_patterns" : ["export"],
 		},
 		{
 			"follow_symlinks": true,
@@ -19,6 +20,11 @@
 			"follow_symlinks": true,
 			"name": "Haxe",
 			"path": "/usr/lib/haxe/std"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Nape",
+			"path": "/usr/lib/haxe/lib/nape/2,0,16"
 		}
 	]
 }

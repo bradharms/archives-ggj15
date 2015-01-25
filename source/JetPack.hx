@@ -25,7 +25,10 @@ class JetPack extends Items
 	public static inline var jetpackHeight = 123.0;
 	override public function new(X, Y) 
 	{
-		super(X, Y);	
+		super(X, Y);
+		holdPosXR = -80.0;
+		holdPosXL = 80.0;
+		holdPosY  = -35.0;
 		makeGraphic(jetpackWidth.int(), jetpackHeight.int(), 0xFFFFFFFF);
 		createRectangularBody();
 		setBodyMaterial(.5, .5, .5, 2);

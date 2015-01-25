@@ -16,6 +16,10 @@ using Std;
 class Items extends FlxNapeSprite
 {
 
+	public var holdPosXR : Float;
+	public var holdPosXL : Float;
+	public var holdPosY  : Float;
+
 	override public function new(X, Y) 
 	{
 		super(X, Y);
