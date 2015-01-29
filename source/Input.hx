@@ -54,34 +54,59 @@ class Input
     public static function define(confs : Map<Int, InputConf>) {
         var instances = new InputMap();
 
+        trace ("BEGIN PLAYER INPUT DEFINITIONS:");
+
         for (playerID in confs.keys()) {
+            trace('  BEGIN PLAYER ${playerID} INPUT DEFINITION:');
             var conf = confs[playerID];
             if (!_instances.exists(playerID)) {
+                trace("  Creating new...");
                 _instances[playerID] =
                 instances[playerID] = new Input(conf);
             } else {
+                trace("  Updating existing...");
                 instances[playerID] = _instances[playerID].configure(conf);
             }
+            trace ('  END PLAYER ${playerID} DEFINITIONS');
         }
+
+        trace ("END PLAYER INPUT DEFINITIONS.");
 
         return instances;
     }
 
     public function configure(conf : InputConf) {
-        conf = {
-            keys : conf.keys != null ? conf.keys : new KeyConf(),
-            gamepads : conf.gamepads != null ? conf.gamepads : new GamepadConfMap(),
-        };
+        if (conf == null) {
+            trace("    Conf passed was null; defaulting to empty.");
+            conf = {};
+        } else {
+            conf = {
+                keys : conf.keys,
+                gamepads : conf.gamepads,
+            };
+        }
+
+        if (conf.keys == null) {
+            trace ("    Key conf passed was null; defaulting to empty.");
+            conf.keys = new KeyConf();
+        }
+
+        if (conf.gamepads == null) {
+            trace ("    Gamepad conf passed was null; defaulting to empty.");
+            conf.gamepads = new GamepadConfMap();
+        }
 
         // Process the configuration for each key
         for (btn in conf.keys.keys()) {
             var key = conf.keys[btn];
             // Allow key configurations to be deleted
             if (key == null) {
+                trace ('    Deleting key for ${btn}.');
                 if (_keysConf.exists(btn))
                     _keysConf.remove(btn);
             // Assign key to button
             } else {
+                trace ('    Setting key for ${btn} to ${key}');
                 _keysConf[btn] = key;
             }
         }
@@ -92,16 +117,13 @@ class Input
 
             // Allow gamepad confs to be erased
             if (gamepadConf == null) {
-                if (_gamepads.exists(gamepadID))
-                    _gamepads.remove(gamepadID);
+                trace ('   Removing gamepad ${gamepadID}');
                 if (_gamepadConfs.exists(gamepadID))
                     _gamepadConfs.remove(gamepadID);
 
             // Process the configuration for each gamepad
             } else {
-                // Assign the hardware gamepad for this gamepad ID
-                var gamepad =
-                _gamepads[gamepadID] = FlxG.gamepads.getByID(gamepadID);
+                trace ('   Configuring gamepad ${gamepadID}');
                 
                 // Create the config mapping object for this gamepad if it does
                 // not exist
@@ -138,8 +160,12 @@ class Input
 
         // Check for each gamepad
         for (gamepadID in _gamepadConfs.keys()) {
-            var gamepadConf = _gamepadConfs[gamepadID];
-            p = p || _gamepads[gamepadID].anyPressed([gamepadConf[btn].button]);
+            for (gamepad in FlxG.gamepads.getActiveGamepads()) {
+                if (gamepad.id == gamepadID) {
+                    var gamepadConf = _gamepadConfs[gamepadID];
+                    p = p || gamepad.anyPressed([gamepadConf[btn].button]);
+                }
+            }
         }
 
         return p;
@@ -153,8 +179,12 @@ class Input
 
         // Check for each gamepad
         for (gamepadID in _gamepadConfs.keys()) {
-             var gamepadConf = _gamepadConfs[gamepadID];
-            p = p || _gamepads[gamepadID].anyJustPressed([gamepadConf[btn].button]);
+            for (gamepad in FlxG.gamepads.getActiveGamepads()) {
+                if (gamepad.id == gamepadID) {
+                    var gamepadConf = _gamepadConfs[gamepadID];
+                    p = p || gamepad.anyJustPressed([gamepadConf[btn].button]);
+                }
+            }
         }
 
         return p;
@@ -168,8 +198,12 @@ class Input
 
         // Check for each gamepad
         for (gamepadID in _gamepadConfs.keys()) {
-             var gamepadConf = _gamepadConfs[gamepadID];
-            p = p ||  _gamepads[gamepadID].anyJustReleased([gamepadConf[btn].button]);
+            for (gamepad in FlxG.gamepads.getActiveGamepads()) {
+                if (gamepad.id == gamepadID) {
+                    var gamepadConf = _gamepadConfs[gamepadID];
+                    p = p || gamepad.anyJustReleased([gamepadConf[btn].button]);
+                }
+            }
         }
 
         return p;
@@ -178,7 +212,7 @@ class Input
     public static function getPlayer(playerID) {
         return  _instances.exists(playerID)
             ? _instances[playerID]
-            : define([playerID => {}])[playerID];
+            : define([(playerID) => {}])[playerID];
     }
 
     public static function traceInputs() {

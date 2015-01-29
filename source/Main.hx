@@ -57,6 +57,7 @@ class Main extends Sprite
 	
 	private function setupGame():Void
 	{
+		setupDefaultInputs();
 		applyCameraZoom();
 		addChild(new FlxGame(
 			gameWidth, 
@@ -82,12 +83,22 @@ class Main extends Sprite
 					Buttons.JUMP   => "Z",
 					Buttons.FIRE   => "X",
 					Buttons.ACTION => "C",
-				]
+				],
 			},
 
 			// Player 2 default controls
 			1 => {
-
+				gamepads : [
+					0 => [
+						Buttons.UP     => {button: 0, axis : null},
+						Buttons.LEFT   => {button: 1, axis : null},
+						Buttons.DOWN   => {button: 2, axis : null},
+						Buttons.RIGHT  => {button: 3, axis : null},
+						Buttons.JUMP   => {button: 4, axis : null},
+						Buttons.FIRE   => {button: 5, axis : null},
+						Buttons.ACTION => {button: 6, axis : null},
+					],
+				],
 			},
 		]);
 	}
