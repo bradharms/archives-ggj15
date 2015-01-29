@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadManager;
 import flixel.input.gamepad.XboxButtonID;
+import Input.Buttons;
 import nape.geom.Vec2;
 import openfl.Assets;
 import openfl.media.Sound;
@@ -84,20 +85,17 @@ class SpaceMan extends FlxNapeSprite
 		var gamepad = FlxG.gamepads.lastActive;
 		if (playerID == 0 || gamepad != null)
 		{
-			if ((playerID == 0 && FlxG.keys.pressed.UP)
-				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_UP)))
+			if (input.pressed(Buttons.UP))
 			{
 
 			}
 			
-			if ((playerID == 0 && FlxG.keys.pressed.DOWN)
-				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_DOWN)))
+			if (input.pressed(Buttons.DOWN))
 			{
 				trace('test');
 			}
 
-			if ((playerID == 0 &&  FlxG.keys.pressed.LEFT)
-				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_LEFT)))
+			if (input.pressed(Buttons.LEFT))
 			{
 				force = Vec2.weak(-accel, 0);
 				newVel = this.body.velocity.add( force );
@@ -105,8 +103,7 @@ class SpaceMan extends FlxNapeSprite
 					this.body.velocity = newVel;
 			}
 
-			if ((playerID == 0 && FlxG.keys.pressed.RIGHT)
-				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.DPAD_RIGHT)))
+			if (input.pressed(Buttons.RIGHT))
 			{
 				force = Vec2.weak(accel, 0);
 				newVel = this.body.velocity.add( force );
@@ -114,15 +111,13 @@ class SpaceMan extends FlxNapeSprite
 					this.body.velocity = newVel; 
 			}
 
-			if ((playerID == 0 && FlxG.keys.justPressed.S)
-				|| (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.A)))
+			if (input.justPressed(Buttons.JUMP))
 			{
 				if (body.velocity.y == 0)
 					this.body.velocity.y = -jumpPower;
 			}
 
-			if ((playerID == 0 && FlxG.keys.justPressed.A)
-				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.B)))
+			if (input.justPressed(Buttons.ACTION))
 			{
 				var collisions = body.interactingBodies();
 				var st = cast(FlxG.state, MyBaseState);
@@ -142,8 +137,7 @@ class SpaceMan extends FlxNapeSprite
 				}
 			}
 
-			if ((playerID == 0 && FlxG.keys.justPressed.D)
-				||  (playerID == 1 && FlxG.gamepads.lastActive.pressed(XboxButtonID.X)))
+			if (input.justPressed(Buttons.FIRE))
 			{
 				trace("Fire.");
 			}

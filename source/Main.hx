@@ -12,6 +12,8 @@ import flixel.system.FlxSplash;
 import openfl.Lib;
 import states.*;
 
+import Input.Buttons;
+
 class Main extends Sprite 
 {
 	public static var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
@@ -66,6 +68,28 @@ class Main extends Sprite
 			skipSplash, 
 			startFullscreen
 		));
+	}
+
+	public static function setupDefaultInputs() : Void {
+		Input.define([
+			// Player 1 default controls
+			0 => {
+				keys : [
+					Buttons.UP     => "W",
+					Buttons.LEFT   => "A",
+					Buttons.DOWN   => "S",
+					Buttons.RIGHT  => "D",
+					Buttons.JUMP   => "Z",
+					Buttons.FIRE   => "X",
+					Buttons.ACTION => "C",
+				]
+			},
+
+			// Player 2 default controls
+			1 => {
+
+			},
+		]);
 	}
 
 	public static function applyCameraZoom() {

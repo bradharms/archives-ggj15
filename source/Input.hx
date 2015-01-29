@@ -130,46 +130,46 @@ class Input
         return this;
     }
 
-    public function pressed(b) {
+    public function pressed(btn : Buttons) {
         var p = false;
         
         // Check for key
-        p = p || FlxG.keys.anyPressed([_keysConf[b]]);
+        p = p || FlxG.keys.anyPressed([_keysConf[btn]]);
 
         // Check for each gamepad
         for (gamepadID in _gamepadConfs.keys()) {
             var gamepadConf = _gamepadConfs[gamepadID];
-            p = p || _gamepads[gamepadID].anyPressed([gamepadConf[b].button]);
+            p = p || _gamepads[gamepadID].anyPressed([gamepadConf[btn].button]);
         }
 
         return p;
     }
 
-    public function justPressed(b) {
+    public function justPressed(btn : Buttons) {
         var p = false;
         
         // Check for key
-        p = p || FlxG.keys.anyJustPressed([_keysConf[b]]);
+        p = p || FlxG.keys.anyJustPressed([_keysConf[btn]]);
 
         // Check for each gamepad
         for (gamepadID in _gamepadConfs.keys()) {
              var gamepadConf = _gamepadConfs[gamepadID];
-            p = p || _gamepads[gamepadID].anyJustPressed([gamepadConf[b].button]);
+            p = p || _gamepads[gamepadID].anyJustPressed([gamepadConf[btn].button]);
         }
 
         return p;
     }
 
-    public function justReleased(b) {
+    public function justReleased(btn : Buttons) {
         var p = false;
         
         // Check for key
-        p = p || FlxG.keys.anyJustReleased([_keysConf[b]]);
+        p = p || FlxG.keys.anyJustReleased([_keysConf[btn]]);
 
         // Check for each gamepad
         for (gamepadID in _gamepadConfs.keys()) {
              var gamepadConf = _gamepadConfs[gamepadID];
-            p = p ||  _gamepads[gamepadID].anyJustReleased([gamepadConf[b].button]);
+            p = p ||  _gamepads[gamepadID].anyJustReleased([gamepadConf[btn].button]);
         }
 
         return p;
