@@ -49,6 +49,8 @@ class SpaceMan extends FlxNapeSprite
 	public var playerID:Int;
 	public var sfx : Sound;
 	public var sfxChan : SoundChannel = null;
+
+	public var input : Input;
 	
 	public function new(X, Y, playerID_) 
 	{
@@ -64,10 +66,11 @@ class SpaceMan extends FlxNapeSprite
 		animation.add(ANIM_WALK,  [for (i in 10...20) i], 15, true);
 		animation.add(ANIM_CLIMB, [20, 21],               4,  true);
 		
-		
 		animation.play(ANIM_STAND);
 
 		sfx = Assets.getSound(STEP_FNAME);
+
+		input = Input.getPlayer(playerID);
 	}
 	
 	override public function update()

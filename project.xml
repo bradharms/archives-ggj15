@@ -79,4 +79,6 @@
 	<!--------------------------------CUSTOM---------------------------------------->
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+
+	<android target-sdk-version="19" />
 </project>
