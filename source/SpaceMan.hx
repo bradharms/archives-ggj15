@@ -5,7 +5,7 @@ import flixel.FlxState;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadManager;
 import flixel.input.gamepad.XboxButtonID;
-import Input.Actions;
+import InputMapper.Action;
 import nape.geom.Vec2;
 import openfl.Assets;
 import openfl.media.Sound;
@@ -51,7 +51,7 @@ class SpaceMan extends FlxNapeSprite
 	public var sfx : Sound;
 	public var sfxChan : SoundChannel = null;
 
-	public var input : Input;
+	public var input : InputMapper;
 	
 	public function new(X, Y, playerID_) 
 	{
@@ -71,7 +71,7 @@ class SpaceMan extends FlxNapeSprite
 
 		sfx = Assets.getSound(STEP_FNAME);
 
-		input = Input.getPlayer(playerID);
+		input = InputMapper.getPlayer(playerID);
 	}
 	
 	override public function update()
@@ -85,17 +85,17 @@ class SpaceMan extends FlxNapeSprite
 		var gamepad = FlxG.gamepads.lastActive;
 		if (playerID == 0 || gamepad != null)
 		{
-			if (input.pressed(Actions.UP))
+			if (input.pressed(Action.UP))
 			{
 
 			}
 			
-			if (input.pressed(Actions.DOWN))
+			if (input.pressed(Action.DOWN))
 			{
 				trace('test');
 			}
 
-			if (input.pressed(Actions.LEFT))
+			if (input.pressed(Action.LEFT))
 			{
 				force = Vec2.weak(-accel, 0);
 				newVel = this.body.velocity.add( force );
@@ -103,7 +103,7 @@ class SpaceMan extends FlxNapeSprite
 					this.body.velocity = newVel;
 			}
 
-			if (input.pressed(Actions.RIGHT))
+			if (input.pressed(Action.RIGHT))
 			{
 				force = Vec2.weak(accel, 0);
 				newVel = this.body.velocity.add( force );
@@ -111,13 +111,13 @@ class SpaceMan extends FlxNapeSprite
 					this.body.velocity = newVel; 
 			}
 
-			if (input.justPressed(Actions.JUMP))
+			if (input.justPressed(Action.JUMP))
 			{
 				if (body.velocity.y == 0)
 					this.body.velocity.y = -jumpPower;
 			}
 
-			if (input.justPressed(Actions.ACTION))
+			if (input.justPressed(Action.ACTION))
 			{
 				var collisions = body.interactingBodies();
 				var st = cast(FlxG.state, MyBaseState);
@@ -137,7 +137,7 @@ class SpaceMan extends FlxNapeSprite
 				}
 			}
 
-			if (input.justPressed(Actions.FIRE))
+			if (input.justPressed(Action.FIRE))
 			{
 				trace("Fire.");
 			}

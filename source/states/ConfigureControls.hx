@@ -2,9 +2,11 @@ package states;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.keyboard.FlxKeyList;
 import flixel.text.FlxText;
-import Input.Actions;
-import Input.InputConf;
+import InputMapper.Action;
+import InputMapper.Input;
 
 using Std;
 using Reflect;
@@ -17,7 +19,7 @@ class ConfigureControls extends FlxState
 
     var txtHeader          : FlxText;
     var txtInfo            : FlxText;
-    var actions            : Array<Actions>;
+    var actions            : Array<Action>;
     var maxPlayers         = 2;
     var currentPlayer      = 0;
     var currentActionIndex = 0;
@@ -33,8 +35,8 @@ class ConfigureControls extends FlxState
             gotoNextState();
         } else {
             for (playerID in 0...maxPlayers)
-                Input.define([ playerID => {} ]);
-            actions = [for (f in Actions.getEnumConstructs()) if (f != "") Actions.createEnum(f) ];
+                InputMapper.define([ playerID => null ]);
+            actions = [for (f in Action.getEnumConstructs()) if (f != "") Action.createEnum(f) ];
         }
     }
 
@@ -44,32 +46,25 @@ class ConfigureControls extends FlxState
 
         txtInfo.text = 'Press ${actions[currentActionIndex]} for player ${currentPlayer}';
 
-        if (key != "") {
-            Input.define([
-                currentPlayer => {
-                    keys: [
-                        actions[currentActionIndex] => key
-                    ]
-                }
+        if (key == "ESCAPE") {
+            defineDefaultControls();
+            gotoNextState();
+        } else if (key != "") {
+            InputMapper.define([
+                currentPlayer => [
+                    actions[currentActionIndex] => [Input.Key(key)]
+                ]
             ]);
             gotoNextInput();
         } else if (gamepad != null) {
             var buttonID = gamepad.firstJustPressedButtonID();
-            var axisID = gamepad.getAxis
             if (buttonID != -1) {
-                Input.define([
-                    currentPlayer => { 
-                        gamepads : [
-                            gamepad.id => [
-                                actions[currentActionIndex] => {
-                                    button : buttonID,
-                                    axis : null
-                                }
-                            ]
-                        ]
-                    }
+                InputMapper.define([
+                    currentPlayer => [
+                        actions[currentActionIndex] => [Input.GamepadButton(buttonID, gamepad.id)]
+                    ]
                 ]);
-                trace ('Player ${playerID} ${actions[currentActionIndex]} set to gamepad ${gamepad.id} button ${buttonID}');
+                trace ('Player ${currentPlayer} ${actions[currentActionIndex]} set to gamepad ${gamepad.id} button ${buttonID}');
                 gotoNextInput();
             }
         }
@@ -97,34 +92,28 @@ class ConfigureControls extends FlxState
     }
 
     public static function defineDefaultControls() {
-        Input.define([
+        InputMapper.define([
             // Player 1 default controls
-            0 => {
-                keys : [
-                    Actions.UP     => "W",
-                    Actions.LEFT   => "A",
-                    Actions.DOWN   => "S",
-                    Actions.RIGHT  => "D",
-                    Actions.JUMP   => "Z",
-                    Actions.FIRE   => "X",
-                    Actions.ACTION => "C",
-                ],
-            },
+            0 => [
+                Action.UP     => [Input.Key("W")],
+                Action.LEFT   => [Input.Key("A")],
+                Action.DOWN   => [Input.Key("S")],
+                Action.RIGHT  => [Input.Key("D")],
+                Action.JUMP   => [Input.Key("Z")],
+                Action.FIRE   => [Input.Key("X")],
+                Action.ACTION => [Input.Key("C")],
+            ],
 
             // Player 2 default controls
-            1 => {
-                gamepads : [
-                    0 => [
-                        Actions.UP     => {button : 0, axis : null},
-                        Actions.LEFT   => {button : 1, axis : null},
-                        Actions.DOWN   => {button : 2, axis : null},
-                        Actions.RIGHT  => {button : 3, axis : null},
-                        Actions.JUMP   => {button : 4, axis : null},
-                        Actions.FIRE   => {button : 5, axis : null},
-                        Actions.ACTION => {button : 6, axis : null},
-                    ],
-                ],
-            },
+            1 => [
+                Action.UP     => [Input.GamepadButton(0)],
+                Action.LEFT   => [Input.GamepadButton(1)],
+                Action.DOWN   => [Input.GamepadButton(2)],
+                Action.RIGHT  => [Input.GamepadButton(3)],
+                Action.JUMP   => [Input.GamepadButton(4)],
+                Action.FIRE   => [Input.GamepadButton(5)],
+                Action.ACTION => [Input.GamepadButton(6)],
+            ],
         ]);
     }
 }
