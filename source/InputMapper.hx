@@ -102,59 +102,60 @@ class InputMapper
         var prevPos : Float;
         var s       : Int;
 
-        for (input in _actionInputsMap[action]) {
-            p = p || switch (input) {
+        if (_actionInputsMap.exists(action)) {
+            for (input in _actionInputsMap[action]) {
+                p = p || switch (input) {
 
-                case Key(key):
+                    case Key(key):
 
-                    FlxG.keys.checkStatus(key, status);
+                        FlxG.keys.checkStatus(key, status);
 
-                case GamepadButton(buttonID, gamepadID):
+                    case GamepadButton(buttonID, gamepadID):
 
-                    if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
-                        gamepad = FlxG.gamepads.getByID(gamepadID);
-                        
-                        gamepad.checkStatus(buttonID, status);
-                    } 
-                    else
-                        false;
+                        if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
+                            gamepad = FlxG.gamepads.getByID(gamepadID);
+                            gamepad.checkStatus(buttonID, status);
+                        } 
+                        else
+                            false;
 
-                case GamepadAxis(axisID, threshold, gamepadID):
+                    case GamepadAxis(axisID, threshold, gamepadID):
 
-                    if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
-                        gamepad = FlxG.gamepads.getByID(gamepadID);
-                        s       = threshold >= 0 ? 1 : -1;
-                        
-                        // Use X and Y-specific functions for the first two
-                        // axises because the docs say the generic function
-                        // doesn't work on the flash target
-                        pos = switch (axisID) {
-                            case 0:  gamepad.getXAxis(axisID);
-                            case 1:  gamepad.getYAxis(axisID);
-                            default: gamepad.getAxis(axisID);
-                        }
-
-                        prevPos = _prevAxisPos[gamepadID][axisID];
-                        _prevAxisPos[gamepadID][axisID] = pos;
-
-                        switch (status) {
-                            case FlxKey.PRESSED:
-                                (pos * s) >= (threshold * s);
+                        if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
+                            gamepad = FlxG.gamepads.getByID(gamepadID);
+                            s       = threshold >= 0 ? 1 : -1;
                             
-                            case FlxKey.JUST_PRESSED:
-                                (pos * s) >= (threshold * s)
-                                && (prevPos * s) < (threshold * s);
-                            
-                            case FlxKey.JUST_RELEASED:
-                                (pos * s) < (threshold * s)
-                                && (prevPos * s) >= (threshold *s);
+                            // Use X and Y-specific functions for the first two
+                            // axises because the docs say the generic function
+                            // doesn't work on the flash target
+                            pos = switch (axisID) {
+                                case 0:  gamepad.getXAxis(axisID);
+                                case 1:  gamepad.getYAxis(axisID);
+                                default: gamepad.getAxis(axisID);
+                            }
 
-                            default: false;
+                            prevPos = _prevAxisPos[gamepadID][axisID];
+                            _prevAxisPos[gamepadID][axisID] = pos;
+
+                            switch (status) {
+                                case FlxKey.PRESSED:
+                                    (pos * s) >= (threshold * s);
+                                
+                                case FlxKey.JUST_PRESSED:
+                                    (pos * s) >= (threshold * s)
+                                    && (prevPos * s) < (threshold * s);
+                                
+                                case FlxKey.JUST_RELEASED:
+                                    (pos * s) < (threshold * s)
+                                    && (prevPos * s) >= (threshold *s);
+
+                                default: false;
+                            }
                         }
-                    }
-                    else false;
+                        else false;
 
-                default: false;
+                    default: false;
+                }
             }
         }
 
