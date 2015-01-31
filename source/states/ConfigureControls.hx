@@ -83,12 +83,12 @@ class ConfigureControls extends FlxState
             } else {
                 // If we haven't started scanning for axis positions on this gamepad yet, start now
                 if (!_prevAxisPos.exists(gamepad.id))
-                    _prevAxisPos[gamepad.id] = [for (i in 0...6) 0.0];
+                    _prevAxisPos[gamepad.id] = [for (i in 0...8) 0.0];
 
-                // NOTE: We are only going to scan for the first 6 inputs (X1, Y1, X2, Y2, LT, RT)
-                for (axisID in 0...6) {
+                // NOTE: We are only going to scan for the first 8 inputs (X1, Y1, X2, Y2, LT, RT, dpad)
+                for (axisID in 0...8) {
                     var axisPos = switch (axisID) {
-                        case 0: gamepad.getXAxis(axisID);
+                        case 0: gamepad.getXAxis(axisID);`
                         case 1: gamepad.getYAxis(axisID);
                         default: gamepad.getAxis(axisID);
                     }

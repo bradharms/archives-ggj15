@@ -16,7 +16,7 @@ import states.*;
 class Main extends Sprite 
 {
 	public static var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	public static var gameHeight:Int = 800; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	public static var gameHeight:Int = 768; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	public static var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	public static var initialState:Class<FlxState> = states.GameInit; // The FlxState the game starts with.
 	public static var framerate:Int = 30; // How many frames per second the game should run at.
