@@ -4,7 +4,9 @@ package ;
 import flixel.FlxG;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadButton;
+import flixel.input.keyboard.FlxKey;
 
+using Lambda;
 using Reflect;
 
 enum Action {
@@ -18,7 +20,7 @@ enum Action {
 }
  
 enum Input {
-    Key(key:String);
+    Key(key:Int);
     GamepadButton(buttonID:Int, ?gamepadID:Int);
     GamepadAxis(axisID:Int, threshold:Float, ?gamepadID:Int);
 }
@@ -30,6 +32,7 @@ class InputMapper
 {
 
     private static var _instances = new Map<Int, InputMapper>();
+    private static var _prevAxisPos = new Map<Int, Map<Int, Float>>();
 
     private var _actionInputsMap : ActionInputsMap;
 
@@ -72,88 +75,106 @@ class InputMapper
 
         // Process the configuration for input
         for (action in actionInputsMap.keys()) {
-            this._actionInputsMap[action] = actionInputsMap[action];
+            var inputs = actionInputsMap[action];
+            this._actionInputsMap[action] = inputs;
+
+            for (input in inputs) {
+                switch (input) {
+                    // Initialize missing axis threshold data if necessary 
+                    case GamepadAxis(axisID, threshold, gamepadID):
+                        if (!_prevAxisPos.exists(gamepadID))
+                            _prevAxisPos[gamepadID] = new Map<Int, Float>();
+                        if (!_prevAxisPos[gamepadID].exists(axisID))
+                            _prevAxisPos[gamepadID][axisID] = 0.0;
+                    
+                    default: // this line is required for haxe
+                }
+            }
         }
 
         return this;
     }
 
-    public function pressed(action : Action) {
-        var p = false;
-        
+    public function checkStatus(action : Action, status = FlxKey.PRESSED) {
+        var gamepad : FlxGamepad;
+        var p       = false;
+        var pos     : Float;
+        var prevPos : Float;
+        var s       : Int;
+
         for (input in _actionInputsMap[action]) {
-            switch (input) {
+            p = p || switch (input) {
+
                 case Key(key):
-                    p = FlxG.keys.anyPressed([key]);
+
+                    FlxG.keys.checkStatus(key, status);
 
                 case GamepadButton(buttonID, gamepadID):
-                    for (gamepad in FlxG.gamepads.getActiveGamepads()) {
-                        if (gamepad.id == gamepadID) {
-                            p = gamepad.anyPressed([buttonID]);
-                        }
-                    }
+
+                    if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
+                        gamepad = FlxG.gamepads.getByID(gamepadID);
+                        
+                        gamepad.checkStatus(buttonID, status);
+                    } 
+                    else
+                        false;
 
                 case GamepadAxis(axisID, threshold, gamepadID):
-                    for (gamepad in FlxG.gamepads.getActiveGamepads()) {
-                        if (gamepad.id == gamepadID) {
-                            var f = threshold >= 0 ? 1 : -1;
-                            p = gamepad.getAxis(axisID) >= (threshold * f);
+
+                    if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
+                        gamepad = FlxG.gamepads.getByID(gamepadID);
+                        s       = threshold >= 0 ? 1 : -1;
+                        
+                        // Use X and Y-specific functions for the first two
+                        // axises because the docs say the generic function
+                        // doesn't work on the flash target
+                        pos = switch (axisID) {
+                            case 0:  gamepad.getXAxis(axisID);
+                            case 1:  gamepad.getYAxis(axisID);
+                            default: gamepad.getAxis(axisID);
+                        }
+
+                        prevPos = _prevAxisPos[gamepadID][axisID];
+                        _prevAxisPos[gamepadID][axisID] = pos;
+
+                        switch (status) {
+                            case FlxKey.PRESSED:
+                                (pos * s) >= (threshold * s);
+                            
+                            case FlxKey.JUST_PRESSED:
+                                (pos * s) >= (threshold * s)
+                                && (prevPos * s) < (threshold * s);
+                            
+                            case FlxKey.JUST_RELEASED:
+                                (pos * s) < (threshold * s)
+                                && (prevPos * s) >= (threshold *s);
+
+                            default: false;
                         }
                     }
+                    else false;
 
-                default:
+                default: false;
             }
         }
 
         return p;
     }
 
-    public function justPressed(action : Action) {
-        var p = false;
-        
-        for (input in _actionInputsMap[action]) {
-            switch (input) {
-                case Key(key):
-                    p = FlxG.keys.anyPressed([key]);
-
-                case GamepadButton(buttonID, gamepadID):
-                    for (gamepad in FlxG.gamepads.getActiveGamepads()) {
-                        if (gamepad.id == gamepadID) {
-                            p = gamepad.anyJustPressed([buttonID]);
-                        }
-                    }
-
-                default:
-            }
-        }
-
-        return p;
+    public inline function pressed(action : Action) {
+        return checkStatus(action, FlxKey.PRESSED);
     }
 
-    public function justReleased(action : Action) {
-        var p = false;
-        
-        for (input in _actionInputsMap[action]) {
-            switch (input) {
-                case Key(key):
-                    p = FlxG.keys.anyPressed([key]);
+    public inline function justPressed(action : Action) {
+        return checkStatus(action, FlxKey.JUST_PRESSED);
+    }
 
-                case GamepadButton(buttonID, gamepadID):
-                    for (gamepad in FlxG.gamepads.getActiveGamepads()) {
-                        if (gamepad.id == gamepadID) {
-                            p = gamepad.anyJustReleased([buttonID]);
-                        }
-                    }
-
-                default:
-            }
-        }
-
-        return p;
+    public inline function justReleased(action : Action) {
+        return checkStatus(action, FlxKey.JUST_RELEASED);
     }
 
     public static function getPlayer(playerID) {
-        return  _instances.exists(playerID)
+        return _instances.exists(playerID)
             ? _instances[playerID]
             : define([playerID => null])[playerID];
     }
