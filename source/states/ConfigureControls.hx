@@ -27,9 +27,11 @@ class ConfigureControls extends FlxState
     private var _prevAxisPos      : Map<Int, Array<Float>>;
 
     override public function create() {
-        txtHeader = new FlxText(0, 0, Main.gameWidth, HEADER, TEXT_SIZE, true);
+        txtHeader = new FlxText(0, 0, Main.gameWidth);
+        txtHeader.setFormat("assets/Xolonium-Regular.otf" ,TEXT_SIZE,0xFFFFFF,"left",0,0,true);
         add(txtHeader);
-        txtInfo = new FlxText(txtHeader.x, txtHeader.y+txtHeader.height, txtHeader.width, "", TEXT_SIZE, true);
+        txtInfo = new FlxText(txtHeader.x, txtHeader.y+txtHeader.height);
+        txtInfo.setFormat("assets/Xolonium-Regular.otf",TEXT_SIZE,0xFFFFFF,"left",0,0,true);
         add(txtInfo);
 
         if (FlxG.save.data.hasField("inputs")) {
@@ -85,11 +87,11 @@ class ConfigureControls extends FlxState
                 if (!_prevAxisPos.exists(gamepad.id))
                     _prevAxisPos[gamepad.id] = [for (i in 0...8) 0.0];
 
-                // NOTE: We are only going to scan for the first 8 inputs (X1, Y1, X2, Y2, LT, RT, dpad)
-                for (axisID in 0...8) {
+                // NOTE: We are only going to scan for the first 6 inputs (X1, Y1, X2, Y2, LT, RT)
+                for (axisID in 0...6) {
                     var axisPos = switch (axisID) {
-                        case 0: gamepad.getXAxis(axisID);`
-                        case 1: gamepad.getYAxis(axisID);
+                        case 0:  gamepad.getXAxis(axisID);
+                        case 1:  gamepad.getYAxis(axisID);
                         default: gamepad.getAxis(axisID);
                     }
                     var prevAxisPos = _prevAxisPos[gamepad.id][axisID];
