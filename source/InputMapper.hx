@@ -23,6 +23,7 @@ enum Input {
     Key(key:Int);
     GamepadButton(buttonID:Int, ?gamepadID:Int);
     GamepadAxis(axisID:Int, threshold:Float, ?gamepadID:Int);
+    GamepadDPad(x:Float, y:Float, ?gamepadID:Int);
 }
 
 typedef ActionInputsMap = Map<Action, Array<Input>>;
@@ -33,6 +34,7 @@ class InputMapper
 
     private static var _instances = new Map<Int, InputMapper>();
     private static var _prevAxisPos = new Map<Int, Map<Int, Float>>();
+    private static var _prevDPadAxisPos = new Map<Int, {x:Float, y:Float}>();
 
     private var _actionInputsMap : ActionInputsMap;
 
@@ -81,11 +83,16 @@ class InputMapper
             for (input in inputs) {
                 switch (input) {
                     // Initialize missing axis threshold data if necessary 
-                    case GamepadAxis(axisID, threshold, gamepadID):
+                    case GamepadAxis(axisID, _, gamepadID):
                         if (!_prevAxisPos.exists(gamepadID))
                             _prevAxisPos[gamepadID] = new Map<Int, Float>();
                         if (!_prevAxisPos[gamepadID].exists(axisID))
                             _prevAxisPos[gamepadID][axisID] = 0.0;
+
+                    // Initialize missing hat position data if necessary
+                    case GamepadDPad(_, _, gamepadID):
+                        if (!_prevDPadAxisPos.exists(gamepadID))
+                            _prevDPadAxisPos[gamepadID] = {x:0.0, y:0.0};
                     
                     default: // this line is required for haxe
                 }
@@ -104,55 +111,20 @@ class InputMapper
 
         if (_actionInputsMap.exists(action)) {
             for (input in _actionInputsMap[action]) {
+                if (p) break;
                 p = p || switch (input) {
 
                     case Key(key):
-
-                        FlxG.keys.checkStatus(key, status);
+                        _checkKey(key, status);
 
                     case GamepadButton(buttonID, gamepadID):
-
-                        if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
-                            gamepad = FlxG.gamepads.getByID(gamepadID);
-                            gamepad.checkStatus(buttonID, status);
-                        } 
-                        else
-                            false;
+                        _checkGamepadButton(gamepadID, buttonID, status);
 
                     case GamepadAxis(axisID, threshold, gamepadID):
-
-                        if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
-                            gamepad = FlxG.gamepads.getByID(gamepadID);
-                            s       = threshold >= 0 ? 1 : -1;
-                            
-                            // Use X and Y-specific functions for the first two
-                            // axises because the docs say the generic function
-                            // doesn't work on the flash target
-                            pos = switch (axisID) {
-                                case 0:  gamepad.getXAxis(axisID);
-                                case 1:  gamepad.getYAxis(axisID);
-                                default: gamepad.getAxis(axisID);
-                            }
-
-                            prevPos = _prevAxisPos[gamepadID][axisID];
-                            _prevAxisPos[gamepadID][axisID] = pos;
-
-                            switch (status) {
-                                case FlxKey.PRESSED:
-                                    (pos * s) >= (threshold * s);
-                                
-                                case FlxKey.JUST_PRESSED:
-                                    (pos * s) >= (threshold * s)
-                                    && (prevPos * s) < (threshold * s);
-                                
-                                case FlxKey.JUST_RELEASED:
-                                    (pos * s) < (threshold * s)
-                                    && (prevPos * s) >= (threshold *s);
-
-                                default: false;
-                            }
-                        }
-                        else false;
+                        _checkGamepadAxis(gamepadID, axisID, threshold, status);
+                    
+                    case GamepadDPad(x, y, gamepadID):
+                        _checkGamepadDPad(gamepadID, x, y, status);
 
                     default: false;
                 }
@@ -160,6 +132,119 @@ class InputMapper
         }
 
         return p;
+    }
+
+    private static inline function _checkKey(key, status) {
+        return FlxG.keys.checkStatus(key, status);
+    }
+
+    private static inline function _checkGamepadButton(gamepadID:Int, buttonID:Int, status:Int) {
+        return (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) 
+            && (FlxG.gamepads.getByID(gamepadID).checkStatus(buttonID, status));
+    }
+
+    private static inline function _checkGamepadAxis(gamepadID:Int, axisID:Int, threshold:Float, status:Int) {
+        var result = false;
+        if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
+            var gamepad = FlxG.gamepads.getByID(gamepadID);
+            var s       = threshold >= 0 ? 1 : -1;
+            
+            // Use X and Y-specific functions for the first two
+            // axises because the docs say the generic function
+            // doesn't work on the flash target
+            var pos = switch (axisID) {
+                case 0:  gamepad.getXAxis(axisID);
+                case 1:  gamepad.getYAxis(axisID);
+                default: gamepad.getAxis(axisID);
+            }
+
+            var prevPos = _prevAxisPos[gamepadID][axisID];
+            _prevAxisPos[gamepadID][axisID] = pos;
+
+            switch (status) {
+                case FlxKey.PRESSED:
+                    result = (pos * s) >= (threshold * s);
+                
+                case FlxKey.JUST_PRESSED:
+                    result =(pos * s) >= (threshold * s)
+                        && (prevPos * s) < (threshold * s);
+                
+                case FlxKey.JUST_RELEASED:
+                    result = (pos * s) < (threshold * s)
+                        && (prevPos * s) >= (threshold *s);
+
+                default: 
+                    result = false;
+            }
+        }
+        return result;
+    }
+
+    private static inline function _checkGamepadDPad(gamepadID, x:Float, y:Float, status) {
+        
+        // Non-flash targets use this calculation
+        #if !flash
+        
+        var result = false;
+        if (FlxG.gamepads.getActiveGamepadIDs().indexOf(gamepadID) != -1) {
+            var dp                      = FlxG.gamepads.getByID(gamepadID).hat;
+            var prevDP                  = _prevDPadAxisPos[gamepadID];
+            _prevDPadAxisPos[gamepadID] = {x: dp.x, y: dp.y};
+
+            result = switch (status) {
+
+                case FlxKey.PRESSED:
+
+                    // Current signs match
+                    
+                      ((x == 0 && dp.x == 0)
+                    || (x >  0 && dp.x >  0)
+                    || (x <  0 && dp.x <  0))
+                    &&
+                      ((y == 0 && dp.y != 0)
+                    || (y >  0 && dp.y >  0)
+                    || (y <  0 && dp.y <  0));
+
+                case FlxKey.JUST_PRESSED:
+
+                    // Current signs match, previous signs do NOT match
+                    
+                      (((x == 0) && (dp.x == 0) && (prevDP.x != 0))
+                    || ((x >  0) && (dp.x >  0) && (prevDP.x <= 0))
+                    || ((x <  0) && (dp.x <  0) && (prevDP.x >= 0)))
+                    
+                    &&
+
+                      (((y == 0) && (dp.y == 0) && (prevDP.y != 0))
+                    || ((y >  0) && (dp.y >  0) && (prevDP.y <= 0))
+                    || ((y <  0) && (dp.y <  0) && (prevDP.y >= 0)));
+
+                case FlxKey.JUST_PRESSED:
+                    
+                    // Current signs do NOT match, previous signs match
+                    
+                      (((x == 0) && (dp.x != 0) && (prevDP.x != 0))
+                    || ((x >  0) && (dp.x <  0) && (prevDP.x >= 0))
+                    || ((x <  0) && (dp.x >  0) && (prevDP.x <= 0)))
+                    
+                    &&
+
+                      (((y == 0) && (dp.y == 0) && (prevDP.y != 0))
+                    || ((y >  0) && (dp.y <  0) && (prevDP.y >= 0))
+                    || ((y <  0) && (dp.y >  0) && (prevDP.y <= 0)));
+                
+                default: false;
+            }
+
+        }
+        return result;
+        
+        // Flash sees false for this no matter what
+        #else
+
+        false;
+        
+        #end
     }
 
     public inline function pressed(action : Action) {
