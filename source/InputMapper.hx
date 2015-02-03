@@ -111,11 +111,7 @@ class InputMapper
     }
 
     public function checkStatus(action : Action, status = FlxKey.PRESSED) {
-        var gamepad : FlxGamepad;
-        var p       = false;
-        var pos     : Float;
-        var prevPos : Float;
-        var s       : Int;
+        var p = false;
 
         if (_actionInputsMap.exists(action)) {
             for (input in _actionInputsMap[action]) {
