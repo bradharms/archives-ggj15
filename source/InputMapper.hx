@@ -8,6 +8,7 @@ import flixel.input.keyboard.FlxKey;
 
 using Lambda;
 using Reflect;
+using Util;
 
 enum Action {
     RIGHT;
@@ -32,9 +33,14 @@ typedef ActionInputsMap = Map<Action, Array<Input>>;
 class InputMapper 
 {
 
+    public static inline var MAX_AXIS = 6;
+
     private static var _instances = new Map<Int, InputMapper>();
-    private static var _prevAxisPos = new Map<Int, Map<Int, Float>>();
+    private static var _prevAxisPos = new Map<Int, Array<Float>>();
+
+    #if !flash
     private static var _prevDPadAxisPos = new Map<Int, {x:Float, y:Float}>();
+    #end
 
     private var _actionInputsMap : ActionInputsMap;
 
@@ -85,14 +91,16 @@ class InputMapper
                     // Initialize missing axis threshold data if necessary 
                     case GamepadAxis(axisID, _, gamepadID):
                         if (!_prevAxisPos.exists(gamepadID))
-                            _prevAxisPos[gamepadID] = new Map<Int, Float>();
-                        if (!_prevAxisPos[gamepadID].exists(axisID))
-                            _prevAxisPos[gamepadID][axisID] = 0.0;
+                            _prevAxisPos[gamepadID] = [];
+                        while (_prevAxisPos[gamepadID].length < axisID)
+                            _prevAxisPos[gamepadID].push(0.0);
 
+                    #if !flash
                     // Initialize missing hat position data if necessary
                     case GamepadDPad(_, _, gamepadID):
                         if (!_prevDPadAxisPos.exists(gamepadID))
                             _prevDPadAxisPos[gamepadID] = {x:0.0, y:0.0};
+                    #end
                     
                     default: // this line is required for haxe
                 }
@@ -180,7 +188,7 @@ class InputMapper
         return result;
     }
 
-    private static inline function _checkGamepadDPad(gamepadID, x:Float, y:Float, status) {
+    private static inline function _checkGamepadDPad(gamepadID:Int, x:Float, y:Float, status:Int) {
         
         // Non-flash targets use this calculation
         #if !flash
@@ -191,58 +199,45 @@ class InputMapper
             var prevDP                  = _prevDPadAxisPos[gamepadID];
             _prevDPadAxisPos[gamepadID] = {x: dp.x, y: dp.y};
 
-            result = switch (status) {
+            var sx  = x.sign();
+            var sy  = y.sign();
+            var sxD = dp.x.sign();
+            var syD = dp.y.sign();
+            var sxP = prevDP.x.sign();
+            var syP = prevDP.y.sign();
+
+                     // At least one dimension must be in use
+            result = (x != 0 || y != 0) && switch (status) {
 
                 case FlxKey.PRESSED:
 
-                    // Current signs match
-                    
-                      ((x == 0 && dp.x == 0)
-                    || (x >  0 && dp.x >  0)
-                    || (x <  0 && dp.x <  0))
-                    &&
-                      ((y == 0 && dp.y != 0)
-                    || (y >  0 && dp.y >  0)
-                    || (y <  0 && dp.y <  0));
+                    // Current signs must match; don't care about previous signs
+                       ((sx == 0) || (sx == sxD))
+                    && ((sy == 0) || (sy == syD));
 
                 case FlxKey.JUST_PRESSED:
 
-                    // Current signs match, previous signs do NOT match
-                    
-                      (((x == 0) && (dp.x == 0) && (prevDP.x != 0))
-                    || ((x >  0) && (dp.x >  0) && (prevDP.x <= 0))
-                    || ((x <  0) && (dp.x <  0) && (prevDP.x >= 0)))
-                    
-                    &&
+                    // Current signs must match, previous signs must differ
+                       ((sx == 0) || ((sx == sxD) && (sxD != sxP)))
+                    && ((sy == 0) || ((sy == syD) && (syD != syP)));
 
-                      (((y == 0) && (dp.y == 0) && (prevDP.y != 0))
-                    || ((y >  0) && (dp.y >  0) && (prevDP.y <= 0))
-                    || ((y <  0) && (dp.y <  0) && (prevDP.y >= 0)));
-
-                case FlxKey.JUST_PRESSED:
+                case FlxKey.JUST_RELEASED:
                     
-                    // Current signs do NOT match, previous signs match
-                    
-                      (((x == 0) && (dp.x != 0) && (prevDP.x != 0))
-                    || ((x >  0) && (dp.x <  0) && (prevDP.x >= 0))
-                    || ((x <  0) && (dp.x >  0) && (prevDP.x <= 0)))
-                    
-                    &&
-
-                      (((y == 0) && (dp.y == 0) && (prevDP.y != 0))
-                    || ((y >  0) && (dp.y <  0) && (prevDP.y >= 0))
-                    || ((y <  0) && (dp.y >  0) && (prevDP.y <= 0)));
+                    // Current signs must differ, previous signs must match
+                       ((sx == 0) || ((sx != sxD) && (sxD == sxP)))
+                    && ((sy == 0) || ((sy != syD) && (syD == syP)));
                 
                 default: false;
             }
 
         }
+
         return result;
         
         // Flash sees false for this no matter what
         #else
 
-        false;
+        return false;
         
         #end
     }
@@ -257,6 +252,95 @@ class InputMapper
 
     public inline function justReleased(action : Action) {
         return checkStatus(action, FlxKey.JUST_RELEASED);
+    }
+
+    /**
+     * Return the next input being pressed by the user in the form of an Input constant
+     *
+     * @param axisThreshold Amount by which an axis has to be pushed in either direction in order to register as an input press
+     */
+    static public function acquire(axisThreshold = 0.5) : Input {
+        var input : Input = null;
+
+        var key = FlxG.keys.firstJustPressed();
+
+        if (key != "") {
+            input = Input.Key(FlxG.keys.getKeyCode(key));
+
+        } else {
+            var gamepad = FlxG.gamepads.getFirstActiveGamepad();
+
+            if (gamepad != null) {
+
+                var buttonID = gamepad.firstJustPressedButtonID();
+                if (buttonID != -1) {
+                    input = Input.GamepadButton(buttonID, gamepad.id);
+
+                } else {
+
+                    #if !flash
+                    if (!_prevDPadAxisPos.exists(gamepad.id))
+                        _prevDPadAxisPos[gamepad.id] = {x : 0.0, y : 0.0};
+
+                    var dpX     = gamepad.hat.x;
+                    var dpY     = gamepad.hat.y;
+                    var prevDpX = _prevDPadAxisPos[gamepad.id].x;
+                    var prevDpY = _prevDPadAxisPos[gamepad.id].y;
+                    _prevDPadAxisPos[gamepad.id] = {x : dpX, y : dpY};
+
+                    if (dpX != 0 && dpX != prevDpX && dpY != 0 && dpY != prevDpY) {
+                        input = Input.GamepadDPad(dpX.sign(), dpY.sign(), gamepad.id);
+                    } else if (dpX != 0 && dpX != prevDpX) {
+                        input = Input.GamepadDPad(dpX.sign(), 0, gamepad.id);
+                    } else if (dpY != 0 && dpY != prevDpY) {
+                        input = Input.GamepadDPad(0, dpY.sign(), gamepad.id);
+                    }
+                    #end
+
+                    if (input == null) {
+                        if (!_prevAxisPos.exists(gamepad.id))
+                            _prevAxisPos[gamepad.id] = [for (i in 0...MAX_AXIS) 0.0];
+
+                        for (axisID in 0...MAX_AXIS) {
+                            var axisPos = switch (axisID) {
+                                case 0:  gamepad.getXAxis(axisID);
+                                case 1:  gamepad.getYAxis(axisID);
+                                default: gamepad.getAxis(axisID);
+                            }
+
+                            var prevAxisPos = _prevAxisPos[gamepad.id][axisID];
+                            _prevAxisPos[gamepad.id][axisID] = axisPos;
+                            
+                            if (axisPos >= axisThreshold && prevAxisPos < axisThreshold) {
+                                input = Input.GamepadAxis(axisID, axisThreshold, gamepad.id);
+                                break;
+                            }
+                            else if (axisPos <= -axisThreshold && prevAxisPos > -axisThreshold) {
+                                input = Input.GamepadAxis(axisID, -axisThreshold, gamepad.id);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return input;
+    }
+
+    /**
+     * Acquire the next input pressed by the user and assign it as the input for the given action.
+     * Does nothing if there is currently no user input.
+     * Returns whether or not an input was assigned.
+     */
+    public function grab(action:Action, axisThreshold = 0.5) {
+        var input = acquire(axisThreshold);
+        if (input != null) {
+            _actionInputsMap[action] = [input];
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function getPlayer(playerID) {
